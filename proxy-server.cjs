@@ -90,8 +90,8 @@ function fetchUrl(url, cb) {
   }).on('error', cb);
 }
 
-// Catch-all route to serve the Vite index.html (useful for SPA routing and serving main page)
-app.get('*', (req, res) => {
+// Catch-all middleware to serve the Vite index.html (useful for SPA routing and serving main page)
+app.use((req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
