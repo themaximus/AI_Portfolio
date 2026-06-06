@@ -745,10 +745,12 @@ body {
       padding: 0.35rem 0.7rem;
       border-radius: 6px;
       font-family: 'Fira Code', monospace;
-      white-space: nowrap;
+      white-space: normal;
+      word-break: break-word;
       box-sizing: border-box;
-      flex: 0 1 auto;
-      max-width: 100%;
+      flex: 1 1 auto;
+      text-align: center;
+      min-width: fit-content;
 
       @media (max-width: 480px) {
         font-size: 0.75rem;
@@ -1532,12 +1534,14 @@ body {
 
     .tags-container {
       flex-wrap: wrap;
+      overflow-x: hidden;
     }
 
     .tech-tag {
-      flex: 0 1 auto;
-      white-space: nowrap;
       max-width: 100%;
+      word-break: break-word;
+      white-space: normal;
+      flex-shrink: 1;
     }
   }
 
