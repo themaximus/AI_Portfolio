@@ -10,9 +10,10 @@
 const express = require('express');
 const https   = require('https');
 const http    = require('http');
+const path    = require('path');
 
 const app  = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 // Allow requests from the Vite dev server
 app.use((req, res, next) => {
@@ -20,6 +21,9 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Methods', 'GET');
   next();
 });
+
+// Serve static files from the Vite build output (dist)
+app.use(express.static(path.join(__dirname, 'dist')));
 
 // ── DTEK data endpoint ────────────────────────────────────────────────────────
 // GET /api/dtek?region=https://www.dtek-dnem.com.ua/ua/shutdowns
@@ -85,6 +89,11 @@ function fetchUrl(url, cb) {
     response.on('end', () => cb(null, data));
   }).on('error', cb);
 }
+
+// Catch-all route to serve the Vite index.html (useful for SPA routing and serving main page)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
 
 // ── Start ─────────────────────────────────────────────────────────────────────
 app.listen(PORT, () => {

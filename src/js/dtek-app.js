@@ -4,7 +4,7 @@
  * same UI flow. Data fetched via local proxy-server.js (port 3001).
  */
 
-const PROXY_BASE = 'http://localhost:3001';
+const PROXY_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3001' : window.location.origin;
 
 const REGIONS = {
   'https://www.dtek-dnem.com.ua/ua/shutdowns': 'Дніпро та область',
