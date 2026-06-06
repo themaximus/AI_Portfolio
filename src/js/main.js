@@ -10,6 +10,9 @@ import { init3DScene }     from './scene3d.js';
 // ─── Boot sequence ────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
 
+  // 0. Initialize language toggle early
+  initLanguageSwitcher();
+
   // 1. Show preloader and wait for it to finish
   await initPreloader();
   document.body.classList.add('app-loaded');
@@ -40,6 +43,25 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 9. Scroll-reveal for sections
   initScrollReveal();
 });
+
+// ─── Language Switcher ───────────────────────────────────────────────────────
+function initLanguageSwitcher() {
+  const savedLang = localStorage.getItem('app-lang') || 'ua';
+  document.documentElement.setAttribute('lang', savedLang);
+
+  const checkbox = document.getElementById('lang-checkbox');
+  if (checkbox) {
+    checkbox.checked = (savedLang === 'en');
+    checkbox.addEventListener('change', () => {
+      const targetLang = checkbox.checked ? 'en' : 'ua';
+      localStorage.setItem('app-lang', targetLang);
+      document.documentElement.setAttribute('lang', targetLang);
+      
+      // Notify other modules of the language change
+      window.dispatchEvent(new CustomEvent('lang-changed', { detail: targetLang }));
+    });
+  }
+}
 
 // ─── ASCII Name glitch/decode reveal ─────────────────────────────────────────
 function animateAsciiName() {

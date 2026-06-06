@@ -13,9 +13,90 @@ export function initBoardApp() {
     const appContainerWindow = document.querySelector('.board-app-window');
     if (!appContainerWindow) return;
 
+    // --- СИСТЕМА ЛОКАЛІЗАЦІЇ ---
+    const TRANSLATIONS = {
+        ua: {
+            ok: 'ОК',
+            cancel: 'Скасувати',
+            save: 'Зберегти',
+            yes: 'Так',
+            no: 'Ні',
+            understand: 'Зрозуміло',
+            renameProject: 'Перейменувати проєкт',
+            newName: 'Нова назва:',
+            deleteProject: 'Видалення проєкту',
+            deleteConfirm: 'Ви впевнені, що хочете видалити проєкт "{name}"? Ця дія є незворотною.',
+            newProject: 'Новий проєкт',
+            enterProjectName: 'Введіть назву нового проєкту',
+            recently: 'Нещодавно',
+            edited: 'Змінено:',
+            error: 'Помилка',
+            importPdfError: 'Не вдалося імпортувати PDF файл.',
+            selectPdf: '📄 Оберіть PDF-файл',
+            savePdfError: 'Помилка збереження PDF:',
+            expand: '↕️ Розгорнути',
+            sidePeek: '◨ Збоку',
+            moveToSide: 'Перемістити в бічну панель',
+            collapseCard: '− Згорнути',
+            collapse: '− Згорнути',
+            centerWidth: '⇥ По центру',
+            fullWidth: '↔ На всю ширину',
+            selectFile: '📎 Оберіть будь-який файл',
+            saveFileError: 'Помилка збереження файлу:',
+            defaultPage: 'Головна',
+            searchPlaceholder: 'Пошук...',
+            searchProjects: '🔍 Пошук проєктів...',
+            searchWiki: 'Пошук...',
+            searchGlobal: 'Пошук по всім сторінкам...',
+            untitledPage: 'Нова сторінка',
+            added: 'Додано',
+        },
+        en: {
+            ok: 'OK',
+            cancel: 'Cancel',
+            save: 'Save',
+            yes: 'Yes',
+            no: 'No',
+            understand: 'Got it',
+            renameProject: 'Rename Project',
+            newName: 'New name:',
+            deleteProject: 'Delete Project',
+            deleteConfirm: 'Are you sure you want to delete project "{name}"? This action cannot be undone.',
+            newProject: 'New Project',
+            enterProjectName: 'Enter new project name',
+            recently: 'Recently',
+            edited: 'Modified:',
+            error: 'Error',
+            importPdfError: 'Failed to import PDF file.',
+            selectPdf: '📄 Choose PDF file',
+            savePdfError: 'Failed to save PDF:',
+            expand: '↕️ Expand',
+            sidePeek: '◨ Side Peek',
+            moveToSide: 'Move to side panel',
+            collapseCard: '− Collapse',
+            collapse: '− Collapse',
+            centerWidth: '⇥ Centered',
+            fullWidth: '↔ Full Width',
+            selectFile: '📎 Choose any file',
+            saveFileError: 'Failed to save file:',
+            defaultPage: 'Main Page',
+            searchPlaceholder: 'Search...',
+            searchProjects: '🔍 Search projects...',
+            searchWiki: 'Search wiki...',
+            searchGlobal: 'Search all pages...',
+            untitledPage: 'Untitled Page',
+            added: 'Added',
+        }
+    };
+
+    function t(key) {
+        const lang = document.documentElement.lang || 'ua';
+        return (TRANSLATIONS[lang] && TRANSLATIONS[lang][key]) || TRANSLATIONS['ua'][key] || key;
+    }
+
     // --- СИСТЕМА КАСТОМНЫХ ДИАЛОГОВ ---
     const CustomDialog = {
-        show: function({ type, title, message = '', placeholder = '', defaultValue = '', confirmText = 'ОК', cancelText = 'Отмена' }) {
+        show: function({ type, title, message = '', placeholder = '', defaultValue = '', confirmText = t('ok'), cancelText = t('cancel') }) {
             return new Promise((resolve) => {
                 const overlay = document.getElementById('customDialogOverlay');
                 const titleEl = document.getElementById('customDialogTitle');
@@ -79,13 +160,13 @@ export function initBoardApp() {
             });
         },
         prompt: function(title, placeholder = '', defaultValue = '') {
-            return this.show({ type: 'prompt', title, placeholder, defaultValue, confirmText: 'Сохранить' });
+            return this.show({ type: 'prompt', title, placeholder, defaultValue, confirmText: t('save') });
         },
         confirm: function(title, message = '') {
-            return this.show({ type: 'confirm', title, message, confirmText: 'Да', cancelText: 'Нет' });
+            return this.show({ type: 'confirm', title, message, confirmText: t('yes'), cancelText: t('no') });
         },
         alert: function(title, message = '') {
-            return this.show({ type: 'alert', title, message, confirmText: 'Понятно' });
+            return this.show({ type: 'alert', title, message, confirmText: t('understand') });
         }
     };
 
@@ -158,7 +239,7 @@ export function initBoardApp() {
         createCard.className = 'project-card create-new';
         createCard.innerHTML = `
             <div class="create-icon">➕</div>
-            <div class="project-title">Новый проект</div>
+            <div class="project-title">${t('newProject')}</div>
         `;
         createCard.addEventListener('click', createNewProject);
         grid.appendChild(createCard);
@@ -168,25 +249,25 @@ export function initBoardApp() {
             const card = document.createElement('div');
             card.className = 'project-card';
             const coverColor = project.coverColor || 'var(--accent-secondary)';
-            const dateStr = project.updatedAt ? new Date(project.updatedAt).toLocaleDateString() : 'Недавно';
+            const dateStr = project.updatedAt ? new Date(project.updatedAt).toLocaleDateString() : t('recently');
 
             card.innerHTML = `
                 <div class="project-cover" style="background-color: ${coverColor}">
                     ${project.icon || '📂'}
                     <div class="project-card-actions">
-                        <button class="btn-project-edit" title="Переименовать проект">✏️</button>
-                        <button class="btn-project-delete" title="Удалить проект">🗑️</button>
+                        <button class="btn-project-edit" title="${t('renameProject')}">✏️</button>
+                        <button class="btn-project-delete" title="${t('deleteProject')}">🗑️</button>
                     </div>
                 </div>
                 <div class="project-info">
                     <div class="project-title" title="${project.title}">${project.title}</div>
-                    <div class="project-meta">Изменено: ${dateStr}</div>
+                    <div class="project-meta">${t('edited')} ${dateStr}</div>
                 </div>
             `;
 
             card.querySelector('.btn-project-edit').onclick = async (e) => {
                 e.stopPropagation();
-                const newTitle = await CustomDialog.prompt("Переименовать проект", "Новое название:", project.title);
+                const newTitle = await CustomDialog.prompt(t('renameProject'), t('newName'), project.title);
                 if (newTitle && newTitle !== project.title) {
                     project.title = newTitle;
                     saveProjects();
@@ -196,7 +277,7 @@ export function initBoardApp() {
 
             card.querySelector('.btn-project-delete').onclick = async (e) => {
                 e.stopPropagation();
-                const confirmed = await CustomDialog.confirm("Удаление проекта", `Вы уверены, что хотите удалить проект "${project.title}"? Это действие необратимо.`);
+                const confirmed = await CustomDialog.confirm(t('deleteProject'), t('deleteConfirm').replace('{name}', project.title));
                 if (confirmed) {
                     delete allProjectsData[projectId];
                     saveProjects();
@@ -210,7 +291,7 @@ export function initBoardApp() {
     }
 
     async function createNewProject() {
-        const title = await CustomDialog.prompt("Новый проект", "Введите название нового проекта");
+        const title = await CustomDialog.prompt(t('newProject'), t('enterProjectName'));
         if (!title) return;
         const newId = generateId('proj');
         const colors = ['#2c3e50', '#8e44ad', '#16a085', '#d35400', '#2980b9'];
@@ -246,7 +327,7 @@ export function initBoardApp() {
             activeBoardId = Object.keys(allBoardsData)[0] || null;
             if (!activeBoardId) {
                 activeBoardId = generateId('board');
-                allBoardsData[activeBoardId] = { name: 'Главная', fullContent: { blocks: [] }, columns: [], updatedAt: new Date().toISOString() };
+                allBoardsData[activeBoardId] = { name: t('defaultPage'), fullContent: { blocks: [] }, columns: [], updatedAt: new Date().toISOString() };
                 saveAllBoards();
             }
         }
@@ -299,7 +380,7 @@ export function initBoardApp() {
             renderBoardTree();
         } catch (err) {
             console.error('Native PDF Import Error:', err);
-            await CustomDialog.alert('Ошибка', 'Не удалось импортировать PDF файл.');
+            await CustomDialog.alert(t('error'), t('importPdfError'));
         }
     }
 
@@ -343,7 +424,7 @@ export function initBoardApp() {
 
             // Если файла еще нет (пустой блок)
             if (!fileId) {
-                this.container.innerHTML = '<div style="padding: 1.5rem; border: 2px dashed var(--border-color); border-radius: 12px; opacity: 0.8; cursor: pointer; text-align: center; font-weight: bold;">📄 Выберите PDF-файл</div>';
+                this.container.innerHTML = `<div style="padding: 1.5rem; border: 2px dashed var(--border-color); border-radius: 12px; opacity: 0.8; cursor: pointer; text-align: center; font-weight: bold;">${t('selectPdf')}</div>`;
                 this.container.onclick = () => {
                     const input = document.createElement('input');
                     input.type = 'file';
@@ -357,7 +438,7 @@ export function initBoardApp() {
                                 this._renderContent();
                                 if (typeof debouncedSaveDoc === 'function') debouncedSaveDoc();
                             } catch (err) {
-                                console.error("Ошибка сохранения PDF:", err);
+                                console.error(t('savePdfError'), err);
                             }
                         }
                     };
@@ -374,8 +455,8 @@ export function initBoardApp() {
                     <span class="pdf-icon">📄</span>
                     <span class="pdf-name">${fileName}</span>
                     <div class="pdf-card-actions">
-                        <button class="btn-pdf-action action-expand" title="Развернуть в тексте">↕️ Развернуть</button>
-                        <button class="btn-pdf-action action-side" title="Открыть сбоку">◨ Сбоку</button>
+                        <button class="btn-pdf-action action-expand" title="${t('expand')}">↕️ ${t('expand').replace('↕️ ', '')}</button>
+                        <button class="btn-pdf-action action-side" title="${t('sidePeek')}">◨ ${t('sidePeek').replace('◨ ', '')}</button>
                     </div>
                 `;
                 
@@ -402,9 +483,9 @@ export function initBoardApp() {
                     <div class="pdf-inline-toolbar">
                         <span class="pdf-inline-name">📄 ${fileName}</span>
                         <div class="pdf-inline-actions">
-                            <button class="btn-pdf-action action-side" title="Переместить в боковую панель">◨ Сбоку</button>
-                            <button class="btn-pdf-action action-collapse" title="Свернуть в карточку">− Свернуть</button>
-                            <button class="btn-pdf-action action-width ${isFull ? 'is-active' : ''}">${isFull ? '⇥ По центру' : '↔ На всю ширину'}</button>
+                            <button class="btn-pdf-action action-side" title="${t('moveToSide')}">◨ ${t('sidePeek').replace('◨ ', '')}</button>
+                            <button class="btn-pdf-action action-collapse" title="${t('collapseCard')}">− ${t('collapse').replace('− ', '')}</button>
+                            <button class="btn-pdf-action action-width ${isFull ? 'is-active' : ''}">${isFull ? t('centerWidth') : t('fullWidth')}</button>
                         </div>
                     </div>
                     <iframe class="pdf-inline-iframe"></iframe>
@@ -481,7 +562,7 @@ export function initBoardApp() {
             
             // Если файла нет (пустой блок)
             if (!fileId) {
-                this.container.innerHTML = '<div style="padding: 1.5rem; border: 2px dashed var(--border-color); border-radius: 12px; opacity: 0.8; cursor: pointer; text-align: center; font-weight: bold;">📎 Выберите любой файл</div>';
+                this.container.innerHTML = `<div style="padding: 1.5rem; border: 2px dashed var(--border-color); border-radius: 12px; opacity: 0.8; cursor: pointer; text-align: center; font-weight: bold;">${t('selectFile')}</div>`;
                 this.container.onclick = () => {
                     const input = document.createElement('input');
                     input.type = 'file';
@@ -498,7 +579,7 @@ export function initBoardApp() {
                                 this._renderContent();
                                 if (typeof debouncedSaveDoc === 'function') debouncedSaveDoc();
                             } catch (err) {
-                                console.error("Ошибка сохранения файла:", err);
+                                console.error(t('saveFileError'), err);
                             }
                         }
                     };
@@ -516,10 +597,10 @@ export function initBoardApp() {
                 <div class="uf-icon-box">${icon}</div>
                 <div class="uf-info">
                     <div class="uf-name" title="${fileName}">${fileName}</div>
-                    <div class="uf-meta">${fileSize} • Добавлен: ${date}</div>
+                    <div class="uf-meta">${fileSize} • ${t('added')}: ${date}</div>
                 </div>
                 <div class="uf-actions">
-                    <button class="btn btn-secondary btn-uf-download" title="Скачать файл">
+                    <button class="btn btn-secondary btn-uf-download" title="Download file">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                     </button>
                 </div>
@@ -1138,7 +1219,7 @@ export function initBoardApp() {
         if (oldBoardsData && Object.keys(allProjectsData).length === 0) {
             const defaultProjId = generateId('proj');
             allProjectsData[defaultProjId] = {
-                title: "Мой первый проект",
+                title: document.documentElement.lang === 'en' ? "My First Project" : "Мій перший проєкт",
                 coverColor: "#34495e",
                 icon: '🚀',
                 updatedAt: new Date().toISOString(),
@@ -1147,6 +1228,14 @@ export function initBoardApp() {
             };
             saveProjects();
         }
+
+        // Apply localized placeholders
+        const projectSearch = document.getElementById('projectSearch');
+        if (projectSearch) projectSearch.placeholder = t('searchProjects');
+        const wikiSearch = document.getElementById('wikiSearchInput');
+        if (wikiSearch) wikiSearch.placeholder = t('searchWiki');
+        const globalSearch = document.getElementById('globalSearchInput');
+        if (globalSearch) globalSearch.placeholder = t('searchGlobal');
 
         document.getElementById('appWorkspace').style.display = 'none';
         document.getElementById('projectManagerScreen').style.display = 'flex';
@@ -1405,13 +1494,13 @@ export function initBoardApp() {
                     results.push({ 
                         id: boardId, 
                         title: boardName, 
-                        snippet: snippets.length > 0 ? snippets[0] : 'Совпадение в названии страницы' 
+                        snippet: snippets.length > 0 ? snippets[0] : (document.documentElement.lang === 'en' ? 'Match in page title' : 'Збіг у назві сторінки')
                     });
                 }
             });
 
             if (results.length === 0) {
-                globalSearchResults.innerHTML = '<div style="padding: 2rem; text-align: center; color: var(--text-secondary);">Ничего не найдено. Попробуйте другой запрос.</div>';
+                globalSearchResults.innerHTML = `<div style="padding: 2rem; text-align: center; color: var(--text-secondary);">${document.documentElement.lang === 'en' ? 'No results found. Try another query.' : 'Нічого не знайдено. Спробуйте інший запит.'}</div>`;
                 return;
             }
 
@@ -1438,6 +1527,27 @@ export function initBoardApp() {
             });
             saveCurrentDocument(); 
             saveCurrentBoardState();
+        });
+
+        // Listen for language changes and refresh board components
+        window.addEventListener('lang-changed', () => {
+            const projectSearch = document.getElementById('projectSearch');
+            if (projectSearch) projectSearch.placeholder = t('searchProjects');
+            const wikiSearch = document.getElementById('wikiSearchInput');
+            if (wikiSearch) wikiSearch.placeholder = t('searchWiki');
+            const globalSearch = document.getElementById('globalSearchInput');
+            if (globalSearch) globalSearch.placeholder = t('searchGlobal');
+
+            renderProjectGrid();
+            if (currentProjectId) {
+                const project = allProjectsData[currentProjectId];
+                if (sidebarProjectTitle) sidebarProjectTitle.innerHTML = `${project.title}`;
+                const titleSpan = document.querySelector('#appTitleButton span');
+                if (titleSpan) titleSpan.textContent = project.title;
+                
+                renderBoardTree();
+                loadBoard();
+            }
         });
     }
 

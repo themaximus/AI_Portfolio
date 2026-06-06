@@ -7,23 +7,83 @@
 const PROXY_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3001' : window.location.origin;
 
 const REGIONS = {
-  'https://www.dtek-dnem.com.ua/ua/shutdowns': 'Дніпро та область',
-  'https://www.dtek-kem.com.ua/ua/shutdowns':  'Київ (місто)',
-  'https://www.dtek-krem.com.ua/ua/shutdowns': 'Київська обл.',
-  'https://www.dtek-oem.com.ua/ua/shutdowns':  'Одеська обл.',
-  'https://www.dtek-dem.com.ua/ua/shutdowns':  'Донецька обл.',
+  'https://www.dtek-dnem.com.ua/ua/shutdowns': { ua: 'Дніпро та область', en: 'Dnipro & Region' },
+  'https://www.dtek-kem.com.ua/ua/shutdowns':  { ua: 'Київ (місто)', en: 'Kyiv (City)' },
+  'https://www.dtek-krem.com.ua/ua/shutdowns': { ua: 'Київська обл.', en: 'Kyiv Region' },
+  'https://www.dtek-oem.com.ua/ua/shutdowns':  { ua: 'Одеська обл.', en: 'Odesa Region' },
+  'https://www.dtek-dem.com.ua/ua/shutdowns':  { ua: 'Донецька обл.', en: 'Donetsk Region' },
 };
 const REGION_SHORT = {
-  'https://www.dtek-dnem.com.ua/ua/shutdowns': 'Дніпро',
-  'https://www.dtek-kem.com.ua/ua/shutdowns':  'Київ',
-  'https://www.dtek-krem.com.ua/ua/shutdowns': 'Київ обл.',
-  'https://www.dtek-oem.com.ua/ua/shutdowns':  'Одеса',
-  'https://www.dtek-dem.com.ua/ua/shutdowns':  'Донецьк',
+  'https://www.dtek-dnem.com.ua/ua/shutdowns': { ua: 'Дніпро', en: 'Dnipro' },
+  'https://www.dtek-kem.com.ua/ua/shutdowns':  { ua: 'Київ', en: 'Kyiv' },
+  'https://www.dtek-krem.com.ua/ua/shutdowns': { ua: 'Київ обл.', en: 'Kyiv Reg.' },
+  'https://www.dtek-oem.com.ua/ua/shutdowns':  { ua: 'Одеса', en: 'Odesa' },
+  'https://www.dtek-dem.com.ua/ua/shutdowns':  { ua: 'Донецьк', en: 'Donetsk' },
 };
 const QUEUES = [
   'GPV1.1','GPV1.2','GPV2.1','GPV2.2','GPV3.1','GPV3.2',
   'GPV4.1','GPV4.2','GPV5.1','GPV5.2','GPV6.1','GPV6.2',
 ];
+
+const TRANSLATIONS = {
+  ua: {
+    regionCity: 'Регіон / Місто',
+    outageQueue: 'Черга відключень',
+    queueLabel: 'Черга ',
+    save: 'ЗБЕРЕГТИ',
+    cancel: 'СКАСУВАТИ',
+    appearance: 'Вигляд',
+    bgAnimation: 'Анімація фону',
+    performanceImpact: 'Підвищить навантаження на систему',
+    blurToggle: 'Прозорість / розмиття',
+    author: 'Автор: Максим',
+    title: 'Графік ДТЕК',
+    refresh: 'Оновити',
+    settings: 'Налаштування',
+    today: 'Сьогодні',
+    tomorrow: 'Завтра',
+    waiting: 'Очікування...',
+    updating: 'Оновлення...',
+    error: 'Помилка',
+    noLight: 'Світла немає',
+    hasLight: 'Світло є',
+    scheduleFor: 'ГРАФІК НА',
+    notPublished: 'Графік ще не опубліковано',
+    cfProtection: '☁ Cloudflare захист — спробуйте пізніше',
+    proxyUnavailable: '⚠ Проксі-сервер недоступний — запустіть node proxy-server.js',
+  },
+  en: {
+    regionCity: 'Region / City',
+    outageQueue: 'Outage Group',
+    queueLabel: 'Group ',
+    save: 'SAVE',
+    cancel: 'CANCEL',
+    appearance: 'Appearance',
+    bgAnimation: 'Background Animation',
+    performanceImpact: 'Increases system load',
+    blurToggle: 'Transparency / Blur',
+    author: 'Author: Maksym',
+    title: 'DTEK Schedule',
+    refresh: 'Refresh',
+    settings: 'Settings',
+    today: 'Today',
+    tomorrow: 'Tomorrow',
+    waiting: 'Waiting...',
+    updating: 'Updating...',
+    error: 'Error',
+    noLight: 'Power Off',
+    hasLight: 'Power On',
+    scheduleFor: 'SCHEDULE FOR',
+    notPublished: 'Schedule not published yet',
+    cfProtection: '☁ Cloudflare protection — try again later',
+    proxyUnavailable: '⚠ Proxy server offline — run node proxy-server.js',
+  }
+};
+
+function t(key) {
+  const lang = document.documentElement.lang || 'ua';
+  return (TRANSLATIONS[lang] && TRANSLATIONS[lang][key]) || TRANSLATIONS['ua'][key] || key;
+}
 
 // ── Persistent settings via localStorage ────────────────────────────────────
 function loadSettings() {
@@ -69,40 +129,61 @@ export function initDtekApp() {
 
   // Auto-refresh every 5 minutes (same as desktop)
   setInterval(startUpdate, 300_000);
+
+  // Re-render when language changes
+  window.addEventListener('lang-changed', () => {
+    const rootEl = document.getElementById('dtek-app-root');
+    if (rootEl && rootEl.querySelector('.dw-container')) {
+      const overlayWasVisible = document.getElementById('dw-overlay')?.classList.contains('visible');
+      renderShell(rootEl);
+      applyVisuals();
+      if (overlayWasVisible) {
+        openSettings();
+      }
+      if (state.currentRawData) {
+        updateInterface();
+      } else {
+        if (state.group && state.region) {
+          startUpdate();
+        }
+      }
+    }
+  });
 }
 
 // ── Render the widget shell (static HTML, identical to desktop widget) ────────
 function renderShell(root) {
+  const currentLang = document.documentElement.lang || 'ua';
   root.innerHTML = `
   <div class="dw-container" id="dw-container">
 
     <!-- Settings Overlay -->
     <div id="dw-overlay" class="dw-overlay">
-      <div class="dw-overlay-title">Регіон / Місто</div>
+      <div class="dw-overlay-title">${t('regionCity')}</div>
       <select id="dw-region-select" class="dw-form-select">
         ${Object.entries(REGIONS).map(([v, l]) =>
-          `<option value="${v}" ${v === state.region ? 'selected' : ''}>${l}</option>`
+          `<option value="${v}" ${v === state.region ? 'selected' : ''}>${l[currentLang] || l.ua}</option>`
         ).join('')}
       </select>
 
-      <div class="dw-overlay-title">Черга відключень</div>
+      <div class="dw-overlay-title">${t('outageQueue')}</div>
       <select id="dw-group-select" class="dw-form-select">
         ${QUEUES.map(q =>
-          `<option value="${q}" ${q === state.group ? 'selected' : ''}>${q.replace('GPV', 'Черга ')}</option>`
+          `<option value="${q}" ${q === state.group ? 'selected' : ''}>${q.replace('GPV', t('queueLabel'))}</option>`
         ).join('')}
       </select>
 
-      <button id="dw-save-btn" class="dw-btn-big dw-btn-save">ЗБЕРЕГТИ</button>
-      <button id="dw-cancel-btn" class="dw-btn-big dw-btn-cancel" style="display:none">СКАСУВАТИ</button>
+      <button id="dw-save-btn" class="dw-btn-big dw-btn-save">${t('save')}</button>
+      <button id="dw-cancel-btn" class="dw-btn-big dw-btn-cancel" style="display:none">${t('cancel')}</button>
 
       <hr class="dw-divider">
 
-      <div class="dw-overlay-title">Вигляд</div>
+      <div class="dw-overlay-title">${t('appearance')}</div>
 
       <label class="dw-toggle-row">
         <div class="dw-toggle-label">
-          Анімація фону
-          <small>Підвищить навантаження на систему</small>
+          ${t('bgAnimation')}
+          <small>${t('performanceImpact')}</small>
         </div>
         <div class="dw-toggle-switch">
           <input type="checkbox" id="dw-chk-aurora" ${state.useAurora ? 'checked' : ''}>
@@ -113,8 +194,8 @@ function renderShell(root) {
 
       <label class="dw-toggle-row">
         <div class="dw-toggle-label">
-          Прозорість / розмиття
-          <small>Підвищить навантаження на систему</small>
+          ${t('blurToggle')}
+          <small>${t('performanceImpact')}</small>
         </div>
         <div class="dw-toggle-switch">
           <input type="checkbox" id="dw-chk-blur" ${state.useBlur ? 'checked' : ''}>
@@ -124,29 +205,29 @@ function renderShell(root) {
       </label>
 
       <div class="dw-author-info">
-        Автор: Максим | <a href="https://t.me/etojemaximus" target="_blank" class="dw-author-link">@etojemaximus</a>
+        ${t('author')} | <a href="https://t.me/etojemaximus" target="_blank" class="dw-author-link">@etojemaximus</a>
       </div>
     </div><!-- /overlay -->
 
     <!-- Widget Body -->
     <div class="dw-header">
-      <h2 class="dw-title">Графік ДТЕК</h2>
+      <h2 class="dw-title">${t('title')}</h2>
       <div class="dw-header-actions">
-        <div id="dw-refresh-btn" class="dw-icon-btn dw-refresh-btn" title="Оновити">↻</div>
-        <div id="dw-settings-btn" class="dw-icon-btn" title="Налаштування">⚙</div>
+        <div id="dw-refresh-btn" class="dw-icon-btn dw-refresh-btn" title="${t('refresh')}">↻</div>
+        <div id="dw-settings-btn" class="dw-icon-btn" title="${t('settings')}">⚙</div>
         <div id="dw-group-tag" class="dw-group-badge">...</div>
       </div>
     </div>
 
     <div class="dw-day-toggle">
-      <button class="dw-day-btn active" data-day="0">Сьогодні</button>
-      <button class="dw-day-btn" data-day="1">Завтра</button>
+      <button class="dw-day-btn ${state.selectedDay === 0 ? 'active' : ''}" data-day="0">${t('today')}</button>
+      <button class="dw-day-btn ${state.selectedDay === 1 ? 'active' : ''}" data-day="1">${t('tomorrow')}</button>
     </div>
 
     <div class="dw-status-section">
       <div class="dw-status-line">
         <div id="dw-dot" class="dw-status-dot"></div>
-        <div id="dw-status-text" class="dw-status-text">Очікування...</div>
+        <div id="dw-status-text" class="dw-status-text">${t('waiting')}</div>
       </div>
       <div id="dw-update-date" class="dw-schedule-date">...</div>
     </div>
@@ -194,6 +275,7 @@ function bindEvents() {
 // ── Settings overlay ──────────────────────────────────────────────────────────
 function openSettings() {
   const overlay = document.getElementById('dw-overlay');
+  if (!overlay) return;
   overlay.classList.add('visible');
   document.getElementById('dw-group-select') .value   = state.group  || 'GPV1.1';
   document.getElementById('dw-region-select').value   = state.region;
@@ -204,7 +286,8 @@ function openSettings() {
   }
 }
 function closeSettings() {
-  document.getElementById('dw-overlay').classList.remove('visible');
+  const overlay = document.getElementById('dw-overlay');
+  if (overlay) overlay.classList.remove('visible');
 }
 
 // ── Visual effects ────────────────────────────────────────────────────────────
@@ -225,7 +308,8 @@ async function startUpdate() {
 
   const btn = document.getElementById('dw-refresh-btn');
   if (btn) btn.classList.add('loading');
-  document.getElementById('dw-status-text').innerText = 'Оновлення...';
+  const statusEl = document.getElementById('dw-status-text');
+  if (statusEl) statusEl.innerText = t('updating');
 
   try {
     const url = `${PROXY_BASE}/api/dtek?region=${encodeURIComponent(state.region)}`;
@@ -236,31 +320,36 @@ async function startUpdate() {
       state.currentRawData = data.rawFact;
       updateInterface();
     } else if (data.status === 'cloudflare') {
-      setError('☁ Cloudflare захист — спробуйте пізніше');
+      setError(t('cfProtection'));
     } else {
-      setError(data.message || 'Невідома помилка');
+      setError(data.message || t('error'));
     }
   } catch (e) {
-    setError('⚠ Проксі-сервер недоступний — запустіть node proxy-server.js');
+    setError(t('proxyUnavailable'));
   } finally {
     state.loading = false;
     if (btn) btn.classList.remove('loading');
   }
 }
 
+// ── Display errors ──
 function setError(msg) {
-  document.getElementById('dw-status-text').innerText = 'Помилка';
-  document.getElementById('dw-grid-root').innerHTML =
-    `<div class="dw-error-msg">${msg}</div>`;
+  const statusEl = document.getElementById('dw-status-text');
+  if (statusEl) statusEl.innerText = t('error');
+  const gridRoot = document.getElementById('dw-grid-root');
+  if (gridRoot) gridRoot.innerHTML = `<div class="dw-error-msg">${msg}</div>`;
 }
 
 // ── Render interface — identical logic to desktop updateInterface() ────────────
 function updateInterface() {
-  const regionShort = REGION_SHORT[state.region] || 'ДТЕК';
+  const currentLang = document.documentElement.lang || 'ua';
+  const regionShortMap = REGION_SHORT[state.region];
+  const regionShort = regionShortMap ? (regionShortMap[currentLang] || regionShortMap.ua) : 'DTEK';
   const groupLabel  = state.group.replace('GPV', '');
   const groupTag    = document.getElementById('dw-group-tag');
   if (groupTag) groupTag.innerText = `${regionShort} · ${groupLabel}`;
 
+  if (!state.currentRawData) return;
   const timestamps   = Object.keys(state.currentRawData).sort();
   const todayRaw     = timestamps[0] ? state.currentRawData[timestamps[0]][state.group] : null;
   const tomorrowRaw  = timestamps[1] ? state.currentRawData[timestamps[1]][state.group] : null;
@@ -284,12 +373,13 @@ function updateInterface() {
   const now = new Date(), ch = now.getHours();
   const dd  = new Date();
   if (state.selectedDay === 1) dd.setDate(now.getDate() + 1);
-  document.getElementById('dw-update-date').innerText =
-    `ГРАФІК НА ${dd.toLocaleDateString('uk-UA')}`;
+  const dateEl = document.getElementById('dw-update-date');
+  if (dateEl) dateEl.innerText = `${t('scheduleFor')} ${dd.toLocaleDateString(currentLang === 'ua' ? 'uk-UA' : 'en-US')}`;
 
   // Current status dot & border
   const outNow = Object.keys(todayGrid).length > 0 ? todayGrid[ch] === '1' : false;
-  document.getElementById('dw-status-text').innerText = outNow ? 'Світла немає' : 'Світло є';
+  const statusEl = document.getElementById('dw-status-text');
+  if (statusEl) statusEl.innerText = outNow ? t('noLight') : t('hasLight');
   const accent = outNow ? '#ff4444' : '#00ff88';
   const dot = document.getElementById('dw-dot');
   if (dot) {
@@ -307,18 +397,21 @@ function updateInterface() {
     const allClear = agKeys.length > 0 && Object.values(ag).every(v => v === '0');
     const noData   = agKeys.length === 0;
     if (allClear || noData) {
-      document.getElementById('dw-grid-root').innerHTML = `
-        <div class="dw-no-data">
-          <svg width="90" height="90" viewBox="0 0 90 90" fill="none">
-            <rect x="8" y="14" width="74" height="52" rx="4" fill="none" stroke="white" stroke-width="2.5"/>
-            <path d="M22 14 L22 8 L30 8" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-            <path d="M68 14 L68 8 L60 8" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-            <line x1="45" y1="66" x2="45" y2="80" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-            <line x1="33" y1="80" x2="57" y2="80" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-            <text x="45" y="50" text-anchor="middle" font-size="28" font-family="Segoe UI,sans-serif" font-weight="700" fill="white" opacity="0.9">?</text>
-          </svg>
-          <div>Графік ще не опубліковано</div>
-        </div>`;
+      const gridRoot = document.getElementById('dw-grid-root');
+      if (gridRoot) {
+        gridRoot.innerHTML = `
+          <div class="dw-no-data">
+            <svg width="90" height="90" viewBox="0 0 90 90" fill="none">
+              <rect x="8" y="14" width="74" height="52" rx="4" fill="none" stroke="white" stroke-width="2.5"/>
+              <path d="M22 14 L22 8 L30 8" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+              <path d="M68 14 L68 8 L60 8" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+              <line x1="45" y1="66" x2="45" y2="80" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+              <line x1="33" y1="80" x2="57" y2="80" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+              <text x="45" y="50" text-anchor="middle" font-size="28" font-family="Segoe UI,sans-serif" font-weight="700" fill="white" opacity="0.9">?</text>
+            </svg>
+            <div>${t('notPublished')}</div>
+          </div>`;
+      }
       return;
     }
   }
@@ -335,6 +428,6 @@ function updateInterface() {
     </div>`;
     if (h < 12) l += row; else r += row;
   }
-  document.getElementById('dw-grid-root').innerHTML =
-    `<div class="dw-schedule-col">${l}</div><div class="dw-schedule-col">${r}</div>`;
+  const gridRoot = document.getElementById('dw-grid-root');
+  if (gridRoot) gridRoot.innerHTML = `<div class="dw-schedule-col">${l}</div><div class="dw-schedule-col">${r}</div>`;
 }

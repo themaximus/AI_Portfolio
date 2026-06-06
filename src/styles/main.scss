@@ -431,11 +431,13 @@ body {
   .btn-cv {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.6rem;
+    width: 190px;
     background: rgba($color-cyan, 0.05);
     border: 1px solid rgba($color-cyan, 0.5);
     color: $color-cyan;
-    padding: 0.6rem 1.25rem;
+    padding: 0.6rem 0;
     font-size: 0.9rem;
     font-weight: 700;
     border-radius: 8px;
@@ -3369,5 +3371,143 @@ body {
     background-position: 400% 50%;
   }
 }
+
+/* ── MULTILINGUAL LOCALIZATION & LANG SWITCHER ── */
+html[lang="en"] {
+  .lang-ua { display: none !important; }
+}
+html[lang="ua"] {
+  .lang-en { display: none !important; }
+}
+
+.switch {
+  font-size: 11px;
+  position: relative;
+  display: inline-block;
+  width: 6.2em;
+  height: 2.3em;
+  user-select: none;
+  margin-right: 0.8rem;
+  vertical-align: middle;
+
+  .cb {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+  }
+}
+
+.toggle {
+  position: absolute;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  background-color: #1a1c23;
+  border-radius: 4px;
+  transition: background-color 0.4s;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-family: 'Fira Code', monospace;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.toggle > .left {
+  position: absolute;
+  display: flex;
+  width: 50%;
+  height: 100%;
+  background-color: #00ff41;
+  color: #08090c;
+  left: 0;
+  bottom: 0;
+  align-items: center;
+  justify-content: center;
+  transform-origin: right;
+  transform: rotateX(0deg);
+  transform-style: preserve-3d;
+  transition: all 250ms ease;
+  font-size: 0.9em;
+}
+
+.left::before {
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  background-color: #00e676;
+  transform-origin: center left;
+  transform: rotateY(90deg);
+}
+
+.left::after {
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  background-color: #008f28;
+  transform-origin: center bottom;
+  transform: rotateX(90deg);
+}
+
+.toggle > .right {
+  position: absolute;
+  display: flex;
+  width: 50%;
+  height: 100%;
+  background-color: #2a2c35;
+  color: rgba(255, 255, 255, 0.4);
+  right: 0;
+  bottom: 0;
+  align-items: center;
+  justify-content: center;
+  transform-origin: left;
+  transform: rotateX(10deg) rotateY(-45deg);
+  transform-style: preserve-3d;
+  transition: all 250ms ease;
+  font-size: 0.9em;
+}
+
+.right::before {
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  background-color: #1a1b20;
+  transform-origin: center right;
+  transform: rotateY(-90deg);
+}
+
+.right::after {
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  background-color: #121316;
+  transform-origin: center bottom;
+  transform: rotateX(90deg);
+}
+
+// Checked state overrides
+.switch input:checked + .toggle > .left {
+  transform: rotateX(10deg) rotateY(45deg);
+  background-color: #2a2c35;
+  color: rgba(255, 255, 255, 0.4);
+
+  &::before { background-color: #1a1b20; }
+  &::after { background-color: #121316; }
+}
+
+.switch input:checked + .toggle > .right {
+  transform: rotateX(0deg) rotateY(0deg);
+  background-color: #00b0ff;
+  color: #08090c;
+
+  &::before { background-color: #0091ea; }
+  &::after { background-color: #005691; }
+}
+
 
 
