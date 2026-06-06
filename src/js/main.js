@@ -74,7 +74,7 @@ function animateAsciiName() {
   [nameEl, surnameEl].forEach((el, idx) => {
     if (!el) return;
     const original = el.textContent;
-    const CHARS    = '01アイウエオカキ▓▒░█';
+    const CHARS    = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ#$@&%*+=-_';
     let step = 0;
     const totalSteps = 18;
     const delay = idx * 300; // surname starts 300ms after name

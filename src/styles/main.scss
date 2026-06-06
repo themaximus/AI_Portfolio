@@ -747,10 +747,8 @@ body {
       font-family: 'Fira Code', monospace;
       white-space: normal;
       word-break: break-word;
+      max-width: 100%;
       box-sizing: border-box;
-      flex: 1 1 auto;
-      text-align: center;
-      min-width: fit-content;
 
       @media (max-width: 480px) {
         font-size: 0.75rem;
@@ -1322,6 +1320,7 @@ body {
 
     .ai-tags {
       display: flex;
+      flex-wrap: wrap;
       gap: 0.6rem;
       
       span {
