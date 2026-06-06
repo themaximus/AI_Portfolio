@@ -310,6 +310,7 @@ body {
   max-width: 1100px;
   margin: 0 auto;
   padding: 0 1.5rem;
+  overflow-x: hidden;
   
   opacity: 0;
   transform: translateY(50px);
@@ -707,13 +708,16 @@ body {
 // Skills Grid
 .skills-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
   gap: 1.5rem;
+  width: 100%;
+  overflow-x: hidden;
 
   .skill-group {
     padding: 1.75rem;
     overflow: hidden;
     min-width: 0;
+    width: 100%;
     box-sizing: border-box;
     transition: all 0.25s ease;
 
@@ -1515,27 +1519,48 @@ body {
   }
 
   .skills-grid {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: 1fr;
+    overflow-x: hidden;
 
     .skill-group {
       width: 100%;
       max-width: 100%;
       overflow: hidden;
+      box-sizing: border-box;
+      padding: 1.25rem;
     }
 
     .tags-container {
-      flex-wrap: wrap !important;
+      flex-wrap: wrap;
+      overflow-x: hidden;
     }
 
     .tech-tag {
       max-width: 100%;
       word-break: break-word;
       white-space: normal;
+      flex-shrink: 1;
     }
   }
 
   .custom-cursor, .custom-cursor-glow {
     display: none !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .skills-grid {
+    grid-template-columns: 1fr;
+    overflow-x: hidden;
+
+    .skill-group {
+      padding: 1rem;
+    }
+
+    .tech-tag {
+      font-size: 0.72rem;
+      padding: 0.2rem 0.45rem;
+    }
   }
 }
 
