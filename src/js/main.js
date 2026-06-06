@@ -42,6 +42,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // 9. Scroll-reveal for sections
   initScrollReveal();
+
+  // 10. Mobile drawer controller
+  initBurgerMenu();
 });
 
 // ─── Language Switcher ───────────────────────────────────────────────────────
@@ -181,4 +184,45 @@ function initScrollReveal() {
   };
   window.addEventListener('scroll', reveal, { passive: true });
   reveal();
+}
+
+// ─── Burger Menu Controller ──────────────────────────────────────────────────
+function initBurgerMenu() {
+  const burgerBtn = document.getElementById('burger-menu-btn');
+  const header = document.getElementById('main-header');
+  if (!burgerBtn || !header) return;
+
+  const toggleScroll = (forceClose = false) => {
+    const shouldScroll = forceClose ? true : !header.classList.contains('menu-open');
+    if (!shouldScroll) {
+      document.documentElement.classList.add('no-scroll');
+      document.body.classList.add('no-scroll');
+    } else {
+      document.documentElement.classList.remove('no-scroll');
+      document.body.classList.remove('no-scroll');
+    }
+  };
+
+  burgerBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    header.classList.toggle('menu-open');
+    toggleScroll();
+  });
+
+  const navItems = header.querySelectorAll('.nav-item');
+  navItems.forEach(item => {
+    item.addEventListener('click', () => {
+      header.classList.remove('menu-open');
+      toggleScroll(true);
+    });
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!header.contains(e.target)) {
+      if (header.classList.contains('menu-open')) {
+        header.classList.remove('menu-open');
+        toggleScroll(true);
+      }
+    }
+  });
 }

@@ -612,7 +612,7 @@ export function initBoardApp() {
                 e.stopPropagation();
                 try {
                     const fileBlob = await IndexedDBManager.getFile(fileId);
-                    if (!fileBlob) return await CustomDialog.alert("Ошибка", "Файл не найден в базе данных.");
+                    if (!fileBlob) return await CustomDialog.alert("Помилка", "Файл не знайдено в базі даних.");
                     const url = URL.createObjectURL(fileBlob);
                     const a = document.createElement('a');
                     a.style.display = 'none';
@@ -640,8 +640,8 @@ export function initBoardApp() {
                 <div style="padding: 1rem; border: 1px solid var(--border-color); border-radius: 12px; background: var(--bg-elements-lighter); display: flex; flex-direction: column; gap: 0.8rem; margin: 10px 0;">
                     <div style="font-weight: 700; font-size: 1.1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; display: flex; align-items: center; gap: 8px;">👤 Характеристики NPC</div>
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
-                        <span style="min-width: 60px; font-weight: 600;">Имя:</span>
-                        <input type="text" class="npc-name" value="${this.data.name || ''}" placeholder="Гоблин-разведчик" style="flex-grow: 1; background: var(--bg-main); border: 1px solid var(--border-color); color: var(--text-primary); padding: 8px 12px; border-radius: 8px; outline: none;">
+                        <span style="min-width: 60px; font-weight: 600;">Ім'я:</span>
+                        <input type="text" class="npc-name" value="${this.data.name || ''}" placeholder="Гоблін-розвідник" style="flex-grow: 1; background: var(--bg-main); border: 1px solid var(--border-color); color: var(--text-primary); padding: 8px 12px; border-radius: 8px; outline: none;">
                     </div>
                     <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
                         <div style="display: flex; align-items: center; gap: 0.5rem;">
@@ -649,7 +649,7 @@ export function initBoardApp() {
                             <input type="number" class="npc-hp" value="${this.data.hp || 100}" style="width: 80px; background: var(--bg-main); border: 1px solid var(--border-color); color: var(--text-primary); padding: 8px 12px; border-radius: 8px; outline: none;">
                         </div>
                         <div style="display: flex; align-items: center; gap: 0.5rem;">
-                            <span style="font-weight: 600;">⚔️ Урон:</span>
+                            <span style="font-weight: 600;">⚔️ Шкода:</span>
                             <input type="number" class="npc-damage" value="${this.data.damage || 10}" style="width: 80px; background: var(--bg-main); border: 1px solid var(--border-color); color: var(--text-primary); padding: 8px 12px; border-radius: 8px; outline: none;">
                         </div>
                     </div>
@@ -824,20 +824,20 @@ export function initBoardApp() {
             const addBtn = document.createElement('button');
             addBtn.className = 'btn-icon';
             addBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>`;
-            addBtn.title = "Добавить подстраницу";
+            addBtn.title = "Додати підсторінку";
             addBtn.onclick = async (e) => { 
                 e.stopPropagation(); 
-                const name = await CustomDialog.prompt('Новая страница', 'Введите название:', 'Новая страница'); 
+                const name = await CustomDialog.prompt('Нова сторінка', 'Введіть назву:', 'Нова сторінка'); 
                 if (name) createNewBoard(name, boardId); 
             };
 
             const delBtn = document.createElement('button');
             delBtn.className = 'btn-icon';
             delBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>`;
-            delBtn.title = "Удалить страницу";
+            delBtn.title = "Видалити сторінку";
             delBtn.onclick = async (e) => { 
                 e.stopPropagation(); 
-                const isConfirmed = await CustomDialog.confirm('Удаление', `Удалить "${boardData.name}" и все вложенные страницы?`);
+                const isConfirmed = await CustomDialog.confirm('Видалення', `Видалити "${boardData.name}" та всі вкладені сторінки?`);
                 if (isConfirmed) { 
                     deleteBoardRecursive(boardId); 
                     saveAllBoards(); 
@@ -1130,12 +1130,12 @@ export function initBoardApp() {
                 holder: 'editorjs',
                 tools: getEditorTools(),
                 data: data,
-                placeholder: 'Нажмите "/" для выбора команды...',
+                placeholder: 'Натисніть "/" для вибору команди...',
                 onChange: () => debouncedSaveDoc()
             });
         } catch (err) {
-            console.error("КРИТИЧЕСКАЯ ОШИБКА инициализации Editor.js:", err);
-            document.getElementById('editorjs').innerHTML = '<div style="padding: 2rem; color: var(--accent-danger);">Ошибка загрузки редактора. Попробуйте обновить страницу.</div>';
+            console.error("КРИТИЧНА ПОМИЛКА ініціалізації Editor.js:", err);
+            document.getElementById('editorjs').innerHTML = '<div style="padding: 2rem; color: var(--accent-danger);">Помилка завантаження редактора. Спробуйте оновити сторінку.</div>';
         }
     }
 
