@@ -63,25 +63,25 @@
         <span class="profile-name">Maksym Herashchenko</span>
         <span class="profile-role">AI-Driven Developer &amp; Systems Engineer</span>
       </div>
-      <button class="burger-menu" id="burger-menu-btn" aria-label="Toggle navigation">
-        <span class="burger-bar"></span>
-        <span class="burger-bar"></span>
-        <span class="burger-bar"></span>
-      </button>
       <nav class="nav-links">
         <a href="#about" class="nav-item">About</a>
         <a href="#methodology" class="nav-item">AI Dev</a>
         <a href="#skills" class="nav-item">Stack</a>
         <a href="#projects" class="nav-item">Projects</a>
       </nav>
+      <label class="switch lang-switcher">
+        <input type="checkbox" class="cb" id="lang-checkbox">
+        <span class="toggle">
+          <span class="left">UA</span>
+          <span class="right">ENG</span>
+        </span>
+      </label>
+      <button class="burger-menu" id="burger-menu-btn" aria-label="Toggle navigation">
+        <span class="burger-bar"></span>
+        <span class="burger-bar"></span>
+        <span class="burger-bar"></span>
+      </button>
       <div class="header-actions">
-        <label class="switch lang-switcher">
-          <input type="checkbox" class="cb" id="lang-checkbox">
-          <span class="toggle">
-            <span class="left">UA</span>
-            <span class="right">ENG</span>
-          </span>
-        </label>
         <a href="#cv-download" id="cv-download-btn" class="btn-cv" download="CV_Maksym_Herashchenko.pdf">
           <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
           <span class="lang-ua">Завантажити CV</span>
@@ -238,7 +238,7 @@
               <li><strong>Capacitor:</strong> Shared codebase ported to Android with minimal adjustments.</li>
               <li><strong>Optimization:</strong> Minimal payload size for stable operation under weak EDGE/3G signals.</li>
             </ul>
-            <div class="case-cta-wrap">
+            <div class="case-cta-wrap" style="display: flex; gap: 1rem; flex-wrap: wrap;">
               <button class="btn-case-cta njesenberger-btn dtek-btn" data-target="dtek-live">
                 <div class="btn-top">
                   <span class="lang-ua">⚡ Запустити Live Demo</span>
@@ -247,6 +247,13 @@
                 <div class="btn-bottom"></div>
                 <div class="btn-base"></div>
               </button>
+              <a href="https://github.com/themaximus/DTEK-Widget" target="_blank" rel="noopener noreferrer" class="btn-case-cta njesenberger-btn github-btn" style="text-decoration: none;">
+                <div class="btn-top">
+                  <span>GitHub Repository</span>
+                </div>
+                <div class="btn-bottom"></div>
+                <div class="btn-base"></div>
+              </a>
             </div>
           </div>
         </div>
@@ -291,7 +298,7 @@
               <li><strong>State Management:</strong> Optimized updates of nested hierarchies preventing layout lag.</li>
               <li><strong>Customization:</strong> Filtering by tags, dates, and task priorities.</li>
             </ul>
-            <div class="case-cta-wrap">
+            <div class="case-cta-wrap" style="display: flex; gap: 1rem; flex-wrap: wrap;">
               <button class="btn-case-cta njesenberger-btn board-btn" data-target="board-live">
                 <div class="btn-top">
                   <span class="lang-ua">📋 Запустити Live Demo</span>
@@ -300,6 +307,64 @@
                 <div class="btn-bottom"></div>
                 <div class="btn-base"></div>
               </button>
+              <a href="https://github.com/themaximus/Task-Manager" target="_blank" rel="noopener noreferrer" class="btn-case-cta njesenberger-btn github-btn" style="text-decoration: none;">
+                <div class="btn-top">
+                  <span>GitHub Repository</span>
+                </div>
+                <div class="btn-bottom"></div>
+                <div class="btn-base"></div>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Case 3: AI Portfolio -->
+        <div class="case-card glass-panel" id="case-card-portfolio">
+          <div class="case-visual">
+            <pre class="ascii-mockup">┌──────────────────────────────────────┐
+│ 🌐 AI Portfolio Site       _  []  X  │
+├──────────────────────────────────────┤
+│ CPU: [████████░░] 80%    MEM: 42MB   │
+│                                      │
+│ ACTIVE SUBSYSTEMS:                   │
+│  - ThreeJS 3D Matrix Scene   [OK]    │
+│  - Glitch Terminal Animation [OK]    │
+│  - Multilingual Translation  [UA/EN] │
+│  - Interactive Live Demos    [OK]    │
+└──────────────────────────────────────┘</pre>
+          </div>
+          <div class="case-info">
+            <div class="case-meta">
+              <span class="project-num">
+                <span class="lang-ua">03 / КЕЙС</span>
+                <span class="lang-en">03 / CASE STUDY</span>
+              </span>
+              <h3 class="project-name">AI-Driven Portfolio Website</h3>
+            </div>
+            <div class="case-stack">
+              <span class="tag-badge">HTML5</span><span class="tag-badge">SCSS</span>
+              <span class="tag-badge">JavaScript</span><span class="tag-badge">Vite</span><span class="tag-badge">Three.js</span>
+            </div>
+            <p class="case-desc lang-ua">Інтерактивне веб-портфоліо, розроблене у тісній синергії з ШІ-агентами. Поєднує кіберпанк-естетику, 3D-графіку та інтегровані живі демо-версії реальних додатків.</p>
+            <p class="case-desc lang-en">An interactive portfolio website built in close synergy with AI agents. Combines cyberpunk aesthetics, 3D graphics, and integrated live demos of real applications.</p>
+            <ul class="case-bullet-points lang-ua">
+              <li><strong>Естетика:</strong> Ефект «матричного дощу» на Canvas, інтерактивні тривимірні сцени на Three.js та аналогові ефекти CRT/монітора.</li>
+              <li><strong>Інтеграція:</strong> Пряме вбудовування робочих додатків (DTEK Widget та Smart Board) безпосередньо у сторінку.</li>
+              <li><strong>Оптимізація:</strong> Швидка збірка через Vite, локалізація «на льоту» та плавні мікроанімації.</li>
+            </ul>
+            <ul class="case-bullet-points lang-en">
+              <li><strong>Aesthetics:</strong> Canvas-based "matrix rain", interactive 3D scenes via Three.js, and analog CRT monitor effects.</li>
+              <li><strong>Integration:</strong> Direct embedding of working applications (DTEK Widget and Smart Board) right inside the page.</li>
+              <li><strong>Optimization:</strong> Fast bundler via Vite, on-the-fly localization, and buttery smooth micro-animations.</li>
+            </ul>
+            <div class="case-cta-wrap" style="display: flex; gap: 1rem; flex-wrap: wrap;">
+              <a href="https://github.com/themaximus/AI_Portfolio" target="_blank" rel="noopener noreferrer" class="btn-case-cta njesenberger-btn github-btn" style="text-decoration: none;">
+                <div class="btn-top">
+                  <span>GitHub Repository</span>
+                </div>
+                <div class="btn-bottom"></div>
+                <div class="btn-base"></div>
+              </a>
             </div>
           </div>
         </div>
