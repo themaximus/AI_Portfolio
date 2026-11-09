@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="ua">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Портфоліо Maksym Herashchenko — AI-Driven Developer та Systems Engineer з України. Розробляю продукти з нуля за допомогою AI-агентів: десктопні додатки, вебсервіси, Kanban-системи. Доступні проєкти, технічний стек та CV." />
+  <meta property="og:title" content="Maksym Herashchenko | AI-Driven Developer & Systems Engineer" />
+  <meta property="og:description" content="Портфоліо Maksym Herashchenko — AI-Driven Developer та Systems Engineer з України. Розробляю продукти з нуля за допомогою AI-агентів: десктопні додатки, вебсервіси, Kanban-системи. Доступні проєкти, технічний стек та CV." />
+  <meta property="og:type" content="website" />
+  <title>Maksym Herashchenko | AI-Driven Developer & Systems Engineer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════════════
+       PRELOADER — Binary Rain with Skeleton Screens
+  ══════════════════════════════════════════════════ -->
+  <div id="preloader">
+    <canvas id="preloader-canvas"></canvas>
+    <div class="preloader-skeletons">
+      <div class="sk-line sk-title"></div>
+      <div class="sk-line sk-sub"></div>
+      <div class="sk-row">
+        <div class="sk-card"></div>
+        <div class="sk-card"></div>
+        <div class="sk-card"></div>
+      </div>
+    </div>
+    <div class="preloader-ui">
+      <div class="preloader-boot-text" id="preloader-status">SYSTEM BOOT...</div>
+      <div class="preloader-bar-wrap">
+        <div class="preloader-bar" id="preloader-bar"></div>
+      </div>
+      <div class="preloader-pct" id="preloader-pct">0%</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       BACKGROUND LAYERS (behind all content)
+  ══════════════════════════════════════════════════ -->
+  <!-- Matrix Rain Canvas — continuous falling digits -->
+  <canvas id="matrix-rain"></canvas>
+
+  <!-- Tile Lift Canvas — interactive 3D tile effect -->
+  <canvas id="tile-canvas"></canvas>
+
+  <!-- Readability veil — darkens the content column so text never sits on the effects -->
+  <div class="bg-veil" aria-hidden="true"></div>
+
+  <!-- ══════════════════════════════════════════════════
+       CURSOR
+  ══════════════════════════════════════════════════ -->
+  <div id="custom-cursor" class="custom-cursor"></div>
+  <div id="custom-cursor-glow" class="custom-cursor-glow"></div>
+
+  <!-- ══════════════════════════════════════════════════
+       APP CONTENT
+  ══════════════════════════════════════════════════ -->
+  <div class="app-container" id="app-container">
+
+    <!-- Header -->
+    <header class="main-header glass-panel" id="main-header">
+      <div class="header-profile">
+        <span class="profile-name">Maksym Herashchenko</span>
+        <span class="profile-role">AI-Driven Developer &amp; Systems Engineer</span>
+      </div>
+      <nav class="nav-links">
+        <a href="#about" class="nav-item">About</a>
+        <a href="#methodology" class="nav-item">AI Dev</a>
+        <a href="#skills" class="nav-item">Stack</a>
+        <a href="#projects" class="nav-item">Projects</a>
+      </nav>
+      <label class="switch lang-switcher">
+        <input type="checkbox" class="cb" id="lang-checkbox">
+        <span class="toggle">
+          <span class="left">UA</span>
+          <span class="right">ENG</span>
+        </span>
+      </label>
+      <button class="burger-menu" id="burger-menu-btn" aria-label="Toggle navigation">
+        <span class="burger-bar"></span>
+        <span class="burger-bar"></span>
+        <span class="burger-bar"></span>
+      </button>
+      <div class="header-actions">
+        <a href="/CV_Maksym_Herashchenko.pdf" id="cv-download-btn" class="btn-cv" download="CV_Maksym_Herashchenko.pdf">
+          <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          <span class="lang-ua">Завантажити CV</span>
+          <span class="lang-en">Download CV</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- ── HERO ── -->
+    <section id="about" class="section hero-section">
+      <div class="hero-content">
+
+        <!-- ASCII Art Name — the centerpiece -->
+        <div class="ascii-name-wrapper">
+          <pre class="ascii-name" id="ascii-name">
+███╗   ███╗ █████╗ ██╗  ██╗███████╗██╗   ██╗███╗   ███╗
+████╗ ████║██╔══██╗██║ ██╔╝██╔════╝╚██╗ ██╔╝████╗ ████║
+██╔████╔██║███████║█████╔╝ ███████╗ ╚████╔╝ ██╔████╔██║
+██║╚██╔╝██║██╔══██║██╔═██╗ ╚════██║  ╚██╔╝  ██║╚██╔╝██║
+██║ ╚═╝ ██║██║  ██║██║  ██╗███████║   ██║   ██║ ╚═╝ ██║
+╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝   ╚═╝   ╚═╝     ╚═╝</pre>
+          <pre class="ascii-surname" id="ascii-surname">
+██╗  ██╗███████╗██████╗  █████╗ ███████╗██╗  ██╗ ██████╗██╗  ██╗███████╗███╗   ██╗██╗  ██╗ ██████╗
+██║  ██║██╔════╝██╔══██╗██╔══██╗██╔════╝██║  ██║██╔════╝██║  ██║██╔════╝████╗  ██║██║ ██╔╝██╔═══██╗
+███████║█████╗  ██████╔╝███████║███████╗███████║██║     ███████║█████╗  ██╔██╗ ██║█████╔╝ ██║   ██║
+██╔══██║██╔══╝  ██╔══██╗██╔══██║╚════██║██╔══██║██║     ██╔══██║██╔══╝  ██║╚██╗██║██╔═██╗ ██║   ██║
+██║  ██║███████╗██║  ██║██║  ██║███████║██║  ██║╚██████╗██║  ██║███████╗██║ ╚████║██║  ██╗╚██████╔╝
+╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═══╝╚═╝  ╚═╝ ╚═════╝</pre>
+        </div>
+
+        <div class="location-badge">
+          <span class="pulse-dot"></span>
+          <span>Dnipro, Ukraine (UA) • AI-Driven Developer & Systems Engineer</span>
+        </div>
+
+        <div class="contacts-bar">
+          <a href="https://t.me/etojemaximus" target="_blank" rel="noopener noreferrer" class="contact-card telegram">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 0 0-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .24z"/></svg>
+            <div class="contact-info">
+              <span class="label">Telegram</span>
+              <span class="val">@etojemaximus</span>
+            </div>
+          </a>
+
+          <a href="mailto:etozhemaxim@gmail.com" class="contact-card email">
+            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            <div class="contact-info">
+              <span class="label">Email</span>
+              <span class="val">etozhemaxim@gmail.com</span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── AI METHODOLOGY ── -->
+    <section id="methodology" class="section methodology-section glass-panel">
+      <div class="methodology-text-wrapper">
+        <span class="badge-accent">
+          <span class="lang-ua">ШІ-асистування</span>
+          <span class="lang-en">AI-Assisted</span>
+        </span>
+        <h2 class="section-title">AI-Driven Development</h2>
+        <p class="methodology-desc lang-ua">
+          Розробляю програмні рішення, використовуючи методологію <strong>AI-Driven Development</strong>. Проєктую архітектуру та автоматизую процеси розробки через глибоку інтеграцію ШІ-агентів (<strong>Cursor</strong>, <strong>Claude Code</strong>, <strong>Antigravity</strong>) та розгортання локальних мовних моделей (<strong>Local LLMs</strong>). Використання ШІ-інфраструктури як ключового асистента дозволяє мені ефективно працювати з різними фреймворками та гнучко адаптувати стек під конкретні завдання автоматизації та веб-інженерії.
+        </p>
+        <p class="methodology-desc lang-en">
+          I build software solutions leveraging the <strong>AI-Driven Development</strong> methodology. I design architecture and automate development workflows through deep integration of AI agents (<strong>Cursor</strong>, <strong>Claude Code</strong>, <strong>Antigravity</strong>) and deployment of <strong>Local LLMs</strong>. Utilizing AI infrastructure as a key assistant enables me to work efficiently across various frameworks and flexibly adapt the stack to specific automation and web engineering needs.
+        </p>
+        <div class="ai-tags">
+          <span>Cursor</span><span>Claude Code</span><span>Antigravity</span><span>MCP</span><span>Local LLMs</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SKILLS ── -->
+    <section id="skills" class="section skills-section">
+      <div class="section-header-left">
+        <h2 class="section-title">
+          <span class="lang-ua">Технічний стек</span>
+          <span class="lang-en">Technical Stack</span>
+        </h2>
+        <div class="title-line"></div>
+      </div>
+      <div class="skills-grid">
+        <div class="skill-group glass-panel ai-highlight">
+          <div class="group-title">AI-Driven Stack &amp; Orchestration</div>
+          <div class="tags-container">
+            <!-- Агенты для разработки кода -->
+            <span class="tech-tag bold-tag">Cursor</span>
+            <span class="tech-tag bold-tag">Claude Code</span>
+            <span class="tech-tag bold-tag">Antigravity</span>
+            
+            <!-- Автономная оркестрация и инфраструктура -->
+            <span class="tech-tag">MCP Servers</span>
+            <span class="tech-tag">Local LLMs &amp; Self-Hosted AI</span>
+            <span class="tech-tag">Context Management</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── PROJECTS ── -->
+    <section id="projects" class="section projects-section">
+      <div class="section-header-left">
+        <h2 class="section-title">
+          <span class="lang-ua">Розробки та Кейси</span>
+          <span class="lang-en">Developments &amp; Case Studies</span>
+        </h2>
+        <div class="title-line"></div>
+      </div>
+      <div class="projects-list">
+
+        <!-- Case 1: DTEK -->
+        <div class="case-card glass-panel" id="case-card-dtek">
+          <div class="case-info">
+            <div class="case-meta">
+              <span class="project-num">
+                <span class="lang-ua">01 / КЕЙС</span>
+                <span class="lang-en">01 / CASE STUDY</span>
+              </span>
+              <h3 class="project-name">
+                <span class="lang-ua">Світла.Нєт: графік відключень ДТЕК</span>
+                <span class="lang-en">Svitla.Net: DTEK Outage Schedule</span>
+              </h3>
+            </div>
+            <div class="case-stack">
+              <span class="tag-badge">JavaScript</span><span class="tag-badge">Node.js</span><span class="tag-badge">Express</span>
+              <span class="tag-badge">C# / WebView2</span><span class="tag-badge">Kotlin</span><span class="tag-badge">Inno Setup</span>
+            </div>
+            <p class="case-desc lang-ua">Віджет графіків відключень світла для шести регіонів ДТЕК: Київ, Київщина, Дніпро разом із ЦЕК, Одеса, Донеччина. Показує, чи є світло зараз, графік на сьогодні й завтра та екстрені відключення. Працює на робочому столі Windows, на Android і у вебі.</p>
+            <p class="case-desc lang-en">A power outage schedule widget for six DTEK regions: Kyiv city, Kyiv region, Dnipro including CEC, Odesa and Donetsk. It shows whether the power is on right now, today's and tomorrow's schedule and emergency outages. It runs on the Windows desktop, on Android and on the web.</p>
+            <ul class="case-bullet-points lang-ua">
+              <li><strong>Кілька джерел:</strong> сторінки ДТЕК, публічний API YASNO та дзеркало outage-data-ua як резерв. Сервер бере перше джерело з графіком на сьогодні, добирає завтрашній день з іншого й ніколи не видає старий день за сьогоднішній.</li>
+              <li><strong>Windows-застосунок:</strong> безрамкове прозоре вікно на WebView2 з лаунчером на C#, іконка в треї з відліком до зміни стану, пошук черги за адресою прямо на сайті ДТЕК, інсталятор без прав адміністратора.</li>
+              <li><strong>Android-застосунок:</strong> нативний застосунок на Kotlin із трьома віджетами для головного екрана, фоновим оновленням і сповіщеннями про екстрені відключення.</li>
+              <li><strong>Екстрені відключення:</strong> коли Укренерго вводить екстрені відключення, віджет показує повідомлення ДТЕК замість графіка, який тоді не діє.</li>
+            </ul>
+            <ul class="case-bullet-points lang-en">
+              <li><strong>Several sources:</strong> DTEK's own pages, YASNO's public API and the outage-data-ua mirror as a fallback. The server takes the first source with today's schedule, fills in tomorrow from another and never passes an old day off as today.</li>
+              <li><strong>Windows app:</strong> a frameless transparent WebView2 window with a C# launcher, a tray icon counting down to the next change, group lookup by address on the DTEK site itself, an installer that needs no admin rights.</li>
+              <li><strong>Android app:</strong> a native Kotlin app with three home screen widgets, background updates and emergency outage notifications.</li>
+              <li><strong>Emergency outages:</strong> when Ukrenergo orders emergency outages, the widget shows DTEK's notice instead of a schedule that no longer applies.</li>
+            </ul>
+            <div class="case-cta-wrap" style="display: flex; gap: 1rem; flex-wrap: wrap;">
+              <button class="btn-case-cta njesenberger-btn dtek-btn" data-target="dtek-live">
+                <div class="btn-top">
+                  <span class="lang-ua">Запустити Live Demo</span>
+                  <span class="lang-en">Launch Live Demo</span>
+                </div>
+                <div class="btn-bottom"></div>
+                <div class="btn-base"></div>
+              </button>
+              <a href="https://github.com/themaximus/Svitla.Net" target="_blank" rel="noopener noreferrer" class="btn-case-cta njesenberger-btn github-btn" style="text-decoration: none;">
+                <div class="btn-top">
+                  <span>GitHub Repository</span>
+                </div>
+                <div class="btn-bottom"></div>
+                <div class="btn-base"></div>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Case 2: Notion Clone -->
+        <div class="case-card glass-panel" id="case-card-board">
+          <div class="case-info">
+            <div class="case-meta">
+              <span class="project-num">
+                <span class="lang-ua">02 / КЕЙС</span>
+                <span class="lang-en">02 / CASE STUDY</span>
+              </span>
+              <h3 class="project-name">Custom Task Manager (Notion Clone)</h3>
+            </div>
+            <div class="case-stack">
+              <span class="tag-badge">React</span><span class="tag-badge">JavaScript</span>
+              <span class="tag-badge">Node.js</span><span class="tag-badge">HTML5/CSS3</span>
+            </div>
+            <p class="case-desc lang-ua">Інтерактивна дошка планування з drag-and-drop інтерфейсом, ієрархічними блоками та кастомізацією робочого простору.</p>
+            <p class="case-desc lang-en">An interactive planning board featuring a drag-and-drop interface, hierarchical blocks, and workspace customization.</p>
+            <ul class="case-bullet-points lang-ua">
+              <li><strong>Структура даних:</strong> Ієрархічне дерево блоків з можливістю вкладення списків.</li>
+              <li><strong>State Management:</strong> Оптимізоване оновлення вкладених структур без затримок.</li>
+              <li><strong>Кастомізація:</strong> Фільтрація за тегами, датами та пріоритетами завдань.</li>
+            </ul>
+            <ul class="case-bullet-points lang-en">
+              <li><strong>Data Structure:</strong> Hierarchical block tree supporting nested list structures.</li>
+              <li><strong>State Management:</strong> Optimized updates of nested hierarchies preventing layout lag.</li>
+              <li><strong>Customization:</strong> Filtering by tags, dates, and task priorities.</li>
+            </ul>
+            <div class="case-cta-wrap" style="display: flex; gap: 1rem; flex-wrap: wrap;">
+              <button class="btn-case-cta njesenberger-btn board-btn" data-target="board-live">
+                <div class="btn-top">
+                  <span class="lang-ua">Запустити Live Demo</span>
+                  <span class="lang-en">Launch Live Demo</span>
+                </div>
+                <div class="btn-bottom"></div>
+                <div class="btn-base"></div>
+              </button>
+              <a href="https://github.com/themaximus/Task-Manager" target="_blank" rel="noopener noreferrer" class="btn-case-cta njesenberger-btn github-btn" style="text-decoration: none;">
+                <div class="btn-top">
+                  <span>GitHub Repository</span>
+                </div>
+                <div class="btn-bottom"></div>
+                <div class="btn-base"></div>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Case 3: AI Portfolio -->
+        <div class="case-card glass-panel" id="case-card-portfolio">
+          <div class="case-info">
+            <div class="case-meta">
+              <span class="project-num">
+                <span class="lang-ua">03 / КЕЙС</span>
+                <span class="lang-en">03 / CASE STUDY</span>
+              </span>
+              <h3 class="project-name">AI-Driven Portfolio Website</h3>
+            </div>
+            <div class="case-stack">
+              <span class="tag-badge">HTML5</span><span class="tag-badge">SCSS</span>
+              <span class="tag-badge">JavaScript</span><span class="tag-badge">Vite</span><span class="tag-badge">Three.js</span>
+            </div>
+            <p class="case-desc lang-ua">Інтерактивне веб-портфоліо, розроблене у тісній синергії з ШІ-агентами. Поєднує кіберпанк-естетику, 3D-графіку та інтегровані живі демо-версії реальних додатків.</p>
+            <p class="case-desc lang-en">An interactive portfolio website built in close synergy with AI agents. Combines cyberpunk aesthetics, 3D graphics, and integrated live demos of real applications.</p>
+            <ul class="case-bullet-points lang-ua">
+              <li><strong>Естетика:</strong> Ефект «матричного дощу» на Canvas, інтерактивні тривимірні сцени на Three.js та аналогові ефекти CRT/монітора.</li>
+              <li><strong>Інтеграція:</strong> Пряме вбудовування робочих додатків (DTEK Widget та Smart Board) безпосередньо у сторінку.</li>
+              <li><strong>Оптимізація:</strong> Швидка збірка через Vite, локалізація «на льоту» та плавні мікроанімації.</li>
+            </ul>
+            <ul class="case-bullet-points lang-en">
+              <li><strong>Aesthetics:</strong> Canvas-based "matrix rain", interactive 3D scenes via Three.js, and analog CRT monitor effects.</li>
+              <li><strong>Integration:</strong> Direct embedding of working applications (DTEK Widget and Smart Board) right inside the page.</li>
+              <li><strong>Optimization:</strong> Fast bundler via Vite, on-the-fly localization, and buttery smooth micro-animations.</li>
+            </ul>
+            <div class="case-cta-wrap" style="display: flex; gap: 1rem; flex-wrap: wrap;">
+              <a href="https://github.com/themaximus/AI_Portfolio" target="_blank" rel="noopener noreferrer" class="btn-case-cta njesenberger-btn github-btn" style="text-decoration: none;">
+                <div class="btn-top">
+                  <span>GitHub Repository</span>
+                </div>
+                <div class="btn-bottom"></div>
+                <div class="btn-base"></div>
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── DTEK LIVE DEMO ── -->
+    <section id="dtek-live" class="section section-live-demo" style="display: none;">
+      <div class="section-header-left reveal-header">
+        <div>
+          <h2 class="section-title">
+            <span class="lang-ua">Live Demo — Світла.Нєт</span>
+            <span class="lang-en">Live Demo — Svitla.Net</span>
+          </h2>
+          <div class="title-line" style="background: #ffbd2e;"></div>
+          <p class="section-subtitle">
+            <span class="lang-ua">Інтерактивний моніторинг відключень електроенергії • Спробуйте прямо тут</span>
+            <span class="lang-en">Interactive monitoring of electricity outages • Try it right here</span>
+          </p>
+        </div>
+        <button class="btn-close-demo njesenberger-btn close-btn" data-target="dtek-live" title="Close Demo">
+          <div class="btn-top">
+            <span class="lang-ua">✕ Закрити демо</span>
+            <span class="lang-en">✕ Close Demo</span>
+          </div>
+          <div class="btn-bottom"></div>
+          <div class="btn-base"></div>
+        </button>
+      </div>
+
+      <!-- Platform badges -->
+      <div class="dtek-platforms">
+        <div class="platform-badge">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/></svg>
+          <span>Windows</span>
+          <span class="platform-dot active"></span>
+        </div>
+        <div class="platform-badge">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.523 15.341c-.325 0-.59-.265-.59-.59s.265-.59.59-.59.59.265.59.59-.265.59-.59.59m-11.046 0c-.325 0-.59-.265-.59-.59s.265-.59.59-.59.59.265.59.59-.265.59-.59.59M17.8 9.874l1.694-2.934c.093-.161.038-.368-.123-.461-.161-.093-.368-.038-.461.123L17.2 9.55C16.053 9.025 14.766 8.73 13.4 8.73s-2.653.295-3.8.82L7.09 6.602c-.093-.161-.3-.216-.461-.123s-.216.3-.123.461l1.694 2.934C6.001 11.235 4.8 13.476 4.8 16h14.4c0-2.524-1.201-4.765-3.4-6.126"/></svg>
+          <span>Android</span>
+          <span class="platform-dot active"></span>
+        </div>
+        <div class="platform-badge platform-badge--current">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <span>Web</span>
+          <span class="platform-dot active"></span>
+        </div>
+      </div>
+
+      <!-- Yellow warning notice -->
+      <div class="dtek-notice">
+        <div class="dtek-notice__icon">[!]</div>
+        <div class="dtek-notice__body">
+          <p class="lang-ua">Це веб-версія віджета: ті самі джерела даних і та сама логіка, що й у Windows-застосунку. Функції, яким потрібен сам застосунок (іконка в треї з відліком, пошук черги за адресою на сайті ДТЕК, автозапуск), є лише на ПК. Якщо графіків зараз немає або діють екстрені відключення, віджет так і покаже.</p>
+          <p class="lang-en">This is the web version of the widget: the same data sources and logic as the Windows app. Features that need the app itself (the tray icon with its countdown, group lookup by address on the DTEK site, autostart) are desktop only. When no schedule is published or emergency outages are in force, the widget says so.</p>
+        </div>
+      </div>
+
+      <div class="dtek-app-window" id="dtek-app-root">
+        <!-- Rendered by dtek-app.js -->
+        <div class="dap-placeholder">
+          <span class="lang-ua">Завантаження Світла.Нєт...</span>
+          <span class="lang-en">Loading Svitla.Net...</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SMART BOARD LIVE DEMO ── -->
+    <section id="board-live" class="section section-live-demo" style="display: none;">
+      <div class="section-header-left reveal-header">
+        <div>
+          <h2 class="section-title">Live Demo — Smart Board</h2>
+          <div class="title-line" style="background: #8ab4f8;"></div>
+          <p class="section-subtitle">
+            <span class="lang-ua">Персональна вікі та менеджер файлів. Спробуйте створити проєкт прямо тут.</span>
+            <span class="lang-en">Personal wiki and file manager. Try creating a project right here.</span>
+          </p>
+        </div>
+        <button class="btn-close-demo njesenberger-btn close-btn" data-target="board-live" title="Close Demo">
+          <div class="btn-top">
+            <span class="lang-ua">✕ Закрити демо</span>
+            <span class="lang-en">✕ Close Demo</span>
+          </div>
+          <div class="btn-bottom"></div>
+          <div class="btn-base"></div>
+        </button>
+      </div>
+
+      <div class="board-app-window">
+        <!-- Project Manager view -->
+        <div id="projectManagerScreen" class="project-manager">
+          <header class="pm-header">
+            <div>
+              <h1 style="color: var(--text-primary);">
+                <span class="lang-ua">Ваші проєкти</span>
+                <span class="lang-en">Your Projects</span>
+              </h1>
+              <p class="pm-subtitle">
+                <span class="lang-ua">Оберіть проєкт для роботи або створіть новий</span>
+                <span class="lang-en">Select a project to work on or create a new one</span>
+              </p>
+            </div>
+            <div class="pm-actions">
+              <input type="text" id="projectSearch" placeholder="Пошук проєктів..." class="pm-search">
+            </div>
+          </header>
+          <main class="pm-main">
+            <div class="project-grid" id="projectGrid"></div>
+          </main>
+        </div>
+
+        <!-- App Workspace view -->
+        <div id="appWorkspace" style="display: none;">
+          <div class="overlay" id="overlay"></div>
+
+          <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+              <button id="btnBackToProjects" title="Back to projects">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                <span class="lang-ua">Проєкти</span>
+                <span class="lang-en">Projects</span>
+              </button>
+              <h3 id="sidebarProjectTitle">Project Title</h3>
+              <div class="sidebar-header-actions-fixed">
+                <button id="themeToggleBtn" class="btn-icon" title="Toggle theme">◐</button>
+                <button id="closeSidebarBtn" class="close-sidebar btn-icon" title="Close panel">&times;</button>
+              </div>
+            </div>
+            <div id="sidebarSearchContainer">
+              <input type="text" id="wikiSearchInput" placeholder="Пошук...">
+            </div>
+            <ul id="boardList" class="board-list"></ul>
+            <div class="sidebar-footer">
+              <div class="sidebar-actions">
+                <button id="exportDataBtn" class="btn btn-secondary btn-small" title="Export entire wiki">
+                  <span class="lang-ua">Експорт</span>
+                  <span class="lang-en">Export</span>
+                </button>
+                <button id="importDataBtn" class="btn btn-secondary btn-small" title="Import from file">
+                  <span class="lang-ua">Імпорт</span>
+                  <span class="lang-en">Import</span>
+                </button>
+              </div>
+              <input type="text" id="newBoardNameInput" placeholder="Назва нової сторінки...">
+              <button id="addBoardBtn" class="btn btn-primary" style="justify-content: center;">
+                <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z"></path></svg>
+                <span class="lang-ua">Створити</span>
+                <span class="lang-en">Create</span>
+              </button>
+            </div>
+          </div>
+
+          <header>
+            <div class="header-left">
+              <div id="appTitleButton" class="app-title" title="Open wiki structure">
+                <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                <span id="currentBoardTitle">Page Title</span>
+              </div>
+            </div>
+            <div class="header-right">
+              <div class="view-switcher" style="display: flex; gap: 0.5rem;">
+                <button id="showDocumentViewBtn" class="btn btn-secondary active" title="Document view">
+                  <span>
+                    <span class="lang-ua">Текст</span>
+                    <span class="lang-en">Text</span>
+                  </span>
+                </button>
+                <button id="showGraphViewBtn" class="btn btn-secondary" title="Graph view" style="display:none;">
+                  <span>
+                    <span class="lang-ua">Граф</span>
+                    <span class="lang-en">Graph</span>
+                  </span>
+                </button>
+              </div>
+              <button id="btnAttachFile" class="btn btn-primary" title="Attach file">
+                <span>
+                  <span class="lang-ua">Файл</span>
+                  <span class="lang-en">File</span>
+                </span>
+              </button>
+              <button id="addColumnBtn" class="btn btn-primary btn-add-column" style="display:none;">
+                <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z"></path></svg>
+                <span class="lang-ua">Колонка</span>
+                <span class="lang-en">Column</span>
+              </button>
+            </div>
+          </header>
+
+          <main style="flex-grow: 1; display: flex; overflow: hidden; position: relative;">
+            <div id="documentViewContainer" class="document-view">
+              <div class="document-header">
+                <h1 id="docTitle" contenteditable="true">Page Name</h1>
+                <div class="doc-meta">
+                  <span class="lang-ua">Останні зміни:</span>
+                  <span class="lang-en">Last modified:</span>
+                  <span id="docLastModified">-</span>
+                </div>
+              </div>
+              <div id="editorjs"></div>
+            </div>
+            <div id="boardContainer" class="board" style="display:none; width: 100%;"></div>
+            <div id="graphViewContainer" style="display:none; width: 100%; height: 100%;"></div>
+          </main>
+        </div>
+
+        <div id="pdfSidePeek" class="pdf-side-peek">
+          <div class="pdf-side-header">
+            <h3 id="pdfSideTitle" style="margin: 0; font-size: 1.1rem; color: var(--text-primary);">Document.pdf</h3>
+            <button id="pdfSideClose" class="btn-icon" title="Close panel">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+          </div>
+          <iframe id="pdfSideIframe" class="pdf-side-iframe"></iframe>
+        </div>
+      </div>
+
+      <!-- Глобальный поиск (Ctrl+K / Cmd+K) -->
+      <div id="globalSearchOverlay" class="global-search-overlay">
+        <div class="global-search-modal">
+          <div class="global-search-header">
+            <input type="text" id="globalSearchInput" placeholder="Search..." autocomplete="off">
+            <span class="search-shortcut">esc</span>
+          </div>
+          <div id="globalSearchResults" class="global-search-results"></div>
+        </div>
+      </div>
+    </section>
+
+
+
+    <!-- ── FOOTER ── -->
+    <footer class="main-footer">
+      <div class="footer-contacts">
+        <h3>
+          <span class="lang-ua">Зв'язатися зі мною</span>
+          <span class="lang-en">Get in Touch</span>
+        </h3>
+        <div class="footer-links">
+          <a href="https://t.me/etojemaximus">Telegram</a>
+          <a href="mailto:etozhemaxim@gmail.com">Email</a>
+        </div>
+      </div>
+      <p class="copy">&copy; 2026 Maksym Herashchenko</p>
+    </footer>
+
+  </div>
+
+  <!-- Add CSS and Scripts dependencies for Smart Board -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+  
+  <!-- Smart Board Modals -->
+  <input type="file" id="importFileInput" style="display:none;" accept=".json">
+
+  <div id="mediaModal">
+    <span id="closeModalBtn">&times;</span>
+    <div id="mediaModalContent"></div>
+  </div>
+
+  <div class="custom-modal-overlay" id="customModalOverlay">
+    <div class="custom-modal">
+      <div id="customModalContent" class="custom-modal-content"></div>
+      <div id="customModalButtons" class="custom-modal-buttons"></div>
+    </div>
+  </div>
+  
+  <div id="customDialogOverlay" class="custom-dialog-overlay">
+    <div class="custom-dialog-box">
+      <h3 id="customDialogTitle" class="custom-dialog-title">Заголовок</h3>
+      <p id="customDialogMessage" class="custom-dialog-message">Текст сообщения</p>
+      
+      <div class="custom-dialog-input-wrapper">
+        <input type="text" id="customDialogInput" class="custom-dialog-input" autocomplete="off">
+      </div>
+      
+      <div class="custom-dialog-actions">
+        <button id="customDialogCancelBtn" class="btn btn-secondary">Отмена</button>
+        <button id="customDialogConfirmBtn" class="btn btn-primary">ОК</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/image@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/table@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/code@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/checklist@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/link@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/inline-code@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/editorjs-toggle-block"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@itech-indrustries/editorjs-callout"></script>
+
+  <script type="module" src="/src/js/main.js"></script>
+</body>
+</html>
